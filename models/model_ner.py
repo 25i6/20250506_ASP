@@ -57,6 +57,7 @@ class NERWrapper(torch.nn.Module):
         })
 
         self.model = T5NER(backbone_config)
+        self.model.resize_token_embeddings(self.tz.vocab_size)#追加．
         self.beam_size = config["beam_size"]
 
 
@@ -128,6 +129,16 @@ class NERWrapper(torch.nn.Module):
             same_sentence_flag=None,
             **kwargs, 
         ):
+
+       # ここに追加する ↓↓↓
+        max_input_id = input_ids.max().item()
+        max_to_copy_id = to_copy_ids.max().item()
+        vocab_size = self.tz.vocab_size
+        print(f"[DEBUG] Max input_ids: {max_input_id}, Max to_copy_ids: {max_to_copy_id}, Vocab size: {vocab_size}")
+        assert max_input_id < vocab_size, "input_idsにトークナイザー語彙数を超えるIDが含まれています"
+        assert max_to_copy_id < vocab_size, "to_copy_idsにトークナイザー語彙数を超えるIDが含まれています"
+
+
         if len(is_training.size()) == 1:
             is_training = is_training[0]
 
@@ -202,7 +213,7 @@ class NERWrapper(torch.nn.Module):
 
                 results["pairing"].append([x[i] for x in decoder_pairing])
                 results["typing"].append([x[i] for x in decoder_typing])
-
+                
             return results
 
 

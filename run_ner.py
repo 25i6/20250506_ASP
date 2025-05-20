@@ -98,6 +98,12 @@ if __name__ == '__main__':
     if saved_suffix is not None:
         model, start_epoch = runner.initialize_model(saved_suffix, continue_training=True)
         runner.train(model, continued=True, start_epoch=start_epoch)
+        #追加．
+        print(f"Model embedding weight size: {model.get_input_embeddings().weight.size()}")
+
     else:
         model, _ = runner.initialize_model()
         runner.train(model, continued=False)
+        #追加．
+        print(f"Model embedding weight size: {model.get_input_embeddings().weight.size()}")
+

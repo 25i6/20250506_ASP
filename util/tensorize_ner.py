@@ -83,6 +83,9 @@ class Tensorizer:
         self.config = config
         self.tz = T5Tokenizer.from_pretrained(config['plm_tokenizer_name'])
 
+        # 追加.
+        print(f"Tokenizer vocab size: {self.tz.vocab_size}")
+        
         self.num_typing_classes = config['num_typing_classes']
 
         MENTION_START = '<m>'
@@ -93,6 +96,9 @@ class Tensorizer:
 
         self.mention_start_id = self.tz.convert_tokens_to_ids(MENTION_START)
         self.mention_end_id = self.tz.convert_tokens_to_ids(MENTION_END)
+
+        # 追加.
+        print(f"Mention start token id: {self.mention_start_id}, Mention end token id: {self.mention_end_id}")
 
         # Will be used in evaluation
         self.stored_info = {
